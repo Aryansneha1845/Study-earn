@@ -590,16 +590,12 @@ async def watch_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not user:
         return await update.message.reply_text("Please /start first.")
 
-    # Check if pending verify code
-    code_row = get_verify_code(uid)
-    if code_row:
-        created = code_row[2]
-        if int(time.time()) - created < 300:  # code valid for 5 min
-            return await update.message.reply_text(
-                "🔐 Pehle security check complete karo!\nUpar wale codes mein se sahi code tap karo 👆"
-            )
-        else:
-            delete_verify_code(uid)  # expired, remove
+    # Check if pending emoji challenge
+    chall = emoji_challenges.get(uid)
+    if chall and int(time.time()) - chall["created"] < 120:
+        return await update.message.reply_text(
+            "🔐 Pehle emoji security check complete karo! Upar wala emoji tap karo 👆"
+        )
 
     if is_new_user(uid):
         await update.message.reply_text(
@@ -1337,4 +1333,4 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 app.add_error_handler(error_handler)
 
 print("🔥 STUDY & EARN BOT RUNNING")
-app.run_polling(drop_pending_updates=True, allowed_updates=["message", "callback_query"])
+app.run_polling(drop_pending_updates=True, allowed_updates=["message", "callback_query", "pre_checkout_query"])
