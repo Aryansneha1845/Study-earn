@@ -1,0 +1,23 @@
+# Secrets — KABHI GIT PE MAT DAALO
+.env
+*.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
